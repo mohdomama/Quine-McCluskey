@@ -50,14 +50,14 @@ def getPrimeImplicants(terms,number,prime_implicants):
 						if element1[0] not in used_terms:
 							used_terms.append(element1[0])
 						if element2[0] not in used_terms:
-							used_terms.append(element2[0])
+							used_terms.append(element2[0 ])
 
 			if flag==0:
-				if element1[0] not in used_terms:
+				if element1[0] not in used_terms and element1[0] not in [x[0] for x in prime_implicants]:
 					prime_implicants.append(element1)
 
 	for i in terms[number]:
-		if i[0] not in used_terms:
+		if i[0] not in used_terms and i[0] not in [x[0] for x in prime_implicants]:
 			prime_implicants.append(i)
 
 	if not recursion:
@@ -66,13 +66,72 @@ def getPrimeImplicants(terms,number,prime_implicants):
 		getPrimeImplicants(new_terms,number-1,prime_implicants)
 
 
-def main():
-	variables,min_terms_categorised = inputData()
-	prime_implicants=[]
-	getPrimeImplicants(min_terms_categorised,variables,prime_implicants)	
-	print (variables,min_terms_categorised)
+
+def selectImplicants(table,selected_implicants):
+	minimum=min([len(table[i]) for i in table])
+	minimum=[x for x in table if len(table[x])==minimum]
+	deletion=[]
+	for i in minimum:
+		maximum = [x for x in table[i] if len(x[1])==max(len(j[1]) for j in table[i])]
+		for k in maximum:
+			for j in k[1]:
+				if j not in deletion:
+					deletion.append(j)
+			if k not in selected_implicants:
+				selected_implicants.append(k)
+
+	for i in deletion:
+		del table[i]
+	for i in table:
+		for k in table[i] :
+			for j in deletion:
+				if j in k[1]:
+					k[1].remove(j)
+
+
+def minimalize(prime_implicants,min_terms_categorised):
+	selected_implicants=[]
+	table={}
+	for i,j in min_terms_categorised.items():
+		for k in j:
+			table[k[1][0]]=[]
+
 	for i in prime_implicants:
-		print(i)
+		for j in i[1]:
+			table[j].append(i)
+
+	while len(table):
+		selectImplicants(table,selected_implicants)
+
+	return selected_implicants
+
+
+def printing(string):
+	count=0
+	for i in string:
+		count+=1
+		if i=='0':
+			print("A"+str(count)+"'",end="")
+		elif i =="1":
+			print("A"+str(count),end="")
+	print("  +  ",end="")
+
+def main():
+	prime_implicants=[]
+
+	variables,min_terms_categorised = inputData()	
+	getPrimeImplicants(min_terms_categorised,variables,prime_implicants)	
+	selected_implicants= minimalize(prime_implicants,min_terms_categorised)
+
+	print("\nThe function is:")
+	for i in selected_implicants:
+		printing(i[0])
+	print("0")
 
 if __name__=="__main__":
 	main() 
+
+
+
+
+
