@@ -25,7 +25,7 @@ def categorize(min_terms,variables):
 
 def inputData():
 	variables=int(input("Enter the number of variables:\n"))
-	min_terms=[bin(int(x))[2:].zfill(variables) for x in input("Enter the minterms:\n").split()]
+	min_terms=[bin(int(x))[2:].zfill(variables) for x in input("Enter the minterms (space seperated):\n").split()]
 	min_terms_categorised = categorize(min_terms,variables)
 	return variables,min_terms_categorised
 
@@ -150,11 +150,6 @@ def minimalize(prime_implicants,min_terms_categorised):
 			table[j].append(i)
 
 	getEssential(table,essential_implicants)
-	
-	for i in table:
-		for j in table[i]:
-			if j in essential_implicants:
-				table[i].remove(j)
 
 	for i in essential_implicants:
 		for j in i[1]:
@@ -175,10 +170,10 @@ def main():
 	essential_implicants,selected_implicants= minimalize(prime_implicants,min_terms_categorised)
 
 	print("\nThe prime implicants are:")
-	printing(essential_implicants,',')
+	printing(prime_implicants,',')
 
 	print("\nThe essential implicants are:")
-	printing(prime_implicants,',')
+	printing(essential_implicants,',')
 
 	print("\nThe possible functions are:")
 	for i in selected_implicants:
