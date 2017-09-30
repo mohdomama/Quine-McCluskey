@@ -107,13 +107,13 @@ def minimalize(prime_implicants,min_terms_categorised):
 
 
 def printing(string):
-	count=0
+	count=-1
 	for i in string:
 		count+=1
 		if i=='0':
-			print("A"+str(count)+"'",end="")
+			print(chr(ord('a')+count)+"'",end="")
 		elif i =="1":
-			print("A"+str(count),end="")
+			print(chr(ord('a')+count),end="")
 	print("  +  ",end="")
 
 def main():
@@ -123,9 +123,20 @@ def main():
 	getPrimeImplicants(min_terms_categorised,variables,prime_implicants)	
 	selected_implicants= minimalize(prime_implicants,min_terms_categorised)
 
+	print("\nThe prime implicants are:")
+	for i in prime_implicants:
+		print(i)
+
+	print("\nThe selected prime implicants are:")
+	for i in selected_implicants:
+		print(i)
+
 	print("\nThe function is:")
 	for i in selected_implicants:
-		printing(i[0])
+		if i[0]=="-"*variables:
+			print("1 + ",end='')
+		else:
+			printing(i[0])
 	print("0")
 
 if __name__=="__main__":
