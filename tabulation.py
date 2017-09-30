@@ -1,4 +1,4 @@
-def printing(mainList):
+def printing(mainList,char):
 	for string in [x[0] for x in mainList]:
 		count=-1
 		for i in string:
@@ -7,8 +7,8 @@ def printing(mainList):
 				print(chr(ord('a')+count)+"'",end="")
 			elif i =="1":
 				print(chr(ord('a')+count),end="")
-		print("  +  ",end="")
-	print('0')
+		print("  "+char+"  ",end="")
+	print("\b\b\b \n")
 
 
 def categorize(min_terms,variables):
@@ -42,7 +42,6 @@ def check(element1,element2):
 		return False
 	else:
 		return ["".join(combined),element1[1]+element2[1]]
-
 
 
 def getPrimeImplicants(terms,number,prime_implicants):
@@ -79,30 +78,6 @@ def getPrimeImplicants(terms,number,prime_implicants):
 		getPrimeImplicants(new_terms,number-1,prime_implicants)
 
 
-
-def selectImplicants(table,selected_implicants):
-	minimum=min([len(table[i]) for i in table])
-	minimum=[x for x in table if len(table[x])==minimum]
-	deletion=[]
-	for i in minimum:
-		maximum = [x for x in table[i] if len(x[1])==max(len(j[1]) for j in table[i])]
-		for k in maximum:
-			for j in k[1]:
-				if j not in deletion:
-					deletion.append(j)
-			if k not in selected_implicants:
-				selected_implicants.append(k)
-
-	for i in deletion:
-		del table[i]
-	for i in table:
-		for k in table[i] :
-			for j in deletion:
-				if j in k[1]:
-					k[1].remove(j)
-
-
-
 def getEssential(table,essential_implicants):
 
 	for i in [x for x in table if len(table[x])==1]:
@@ -114,7 +89,6 @@ def getEssential(table,essential_implicants):
 def getAllSelected(POS,temp,allSelected,index):
 	if index==len(POS):
 		temp1=temp+[]
-		#print("reached:" , temp1)
 		allSelected.append(temp1)
 		return
 	else:
@@ -135,12 +109,33 @@ def petrickMethod(table,selected_implicants):
 		POS.append(table[i])
 
 	getAllSelected(POS,temp,allSelected,0)
-	for i in allSelected:
-			print (i)
 
 	for i in allSelected:
 		if len(i)==min([len(x) for x in allSelected]):
-			selected_implicants.append(i)
+			if i not in selected_implicants:
+				selected_implicants.append(i)
+
+def getcount(mainList):
+	count =0
+	for string in [x[0] for x in mainList]:
+		for i in string:
+			if i=='0' or i=='1':
+				count+=1
+
+	return count
+
+def getminimal(selected_implicants):
+	minimal_implicants=[]
+	minimum=999999
+	for i in selected_implicants:
+		if getcount(i)<minimum:
+			minimum=getcount(i)
+
+	for i in selected_implicants:
+		if getcount(i)==minimum:
+			minimal_implicants.append(i)
+
+	return minimal_implicants
 
 def minimalize(prime_implicants,min_terms_categorised):
 	selected_implicants=[]
@@ -155,8 +150,6 @@ def minimalize(prime_implicants,min_terms_categorised):
 			table[j].append(i)
 
 	getEssential(table,essential_implicants)
-
-	printing(essential_implicants)
 	
 	for i in table:
 		for j in table[i]:
@@ -168,17 +161,10 @@ def minimalize(prime_implicants,min_terms_categorised):
 			if j in [x for x in table]:
 				del table[j]
 
-	for i in table:
-		print (i," : ",table[i])
-
 	petrickMethod(table,selected_implicants)
-	#print (selected_implicants)
-
-	#while len(table):
-	#	selectImplicants(table,selected_implicants)
-	return essential_implicants,selected_implicants
-
-
+	minimal_implicants=getminimal(selected_implicants)
+	
+	return essential_implicants, minimal_implicants
 
 
 def main():
@@ -189,37 +175,16 @@ def main():
 	essential_implicants,selected_implicants= minimalize(prime_implicants,min_terms_categorised)
 
 	print("\nThe prime implicants are:")
-	for i in prime_implicants:
-		print(i)
-
-	print("\nThe selected prime implicants are:")
-	for i in selected_implicants:
-		print(i)
+	printing(essential_implicants,',')
 
 	print("\nThe essential implicants are:")
-	for i in essential_implicants:
-		print(i)
+	printing(prime_implicants,',')
 
-
+	print("\nThe possible functions are:")
 	for i in selected_implicants:
-		for j in i:
-			essential_implicants.append(j)
-			printing(essential_implicants)
-			essential_implicants.remove(j)
-	#printing(selected_implicants)
-	'''
-	print("\nThe function is:")
-	for i in selected_implicants:
-		if i[0]=="-"*variables:
-			print("1 + ",end='')
-		else:
-			printing(i[0])
-	print("0")
-	'''
+		printing(essential_implicants+i,'+')
+		
+	
+	
 if __name__=="__main__":
 	main() 
-
-
-
-
-
