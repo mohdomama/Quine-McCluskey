@@ -1,3 +1,16 @@
+def printing(mainList):
+	for string in [x[0] for x in mainList]:
+		count=-1
+		for i in string:
+			count+=1
+			if i=='0':
+				print(chr(ord('a')+count)+"'",end="")
+			elif i =="1":
+				print(chr(ord('a')+count),end="")
+		print("  +  ",end="")
+	print('0')
+
+
 def categorize(min_terms,variables):
 	min_terms_categorised={}
 	
@@ -89,9 +102,50 @@ def selectImplicants(table,selected_implicants):
 					k[1].remove(j)
 
 
+
+def getEssential(table,essential_implicants):
+
+	for i in [x for x in table if len(table[x])==1]:
+		if table[i][0] not in essential_implicants:
+			essential_implicants.append(table[i][0])
+		del table[i]
+
+
+def getAllSelected(POS,temp,allSelected,index):
+	if index==len(POS):
+		temp1=temp+[]
+		#print("reached:" , temp1)
+		allSelected.append(temp1)
+		return
+	else:
+		for i in POS[index]:
+			if i not in temp:
+				temp.append(i)
+				getAllSelected(POS,temp,allSelected,index+1)
+				temp.remove(i)
+			else:
+				getAllSelected(POS,temp,allSelected,index+1)
+
+
+def petrickMethod(table,selected_implicants):
+	temp=[]
+	POS=[]
+	allSelected=[]
+	for i in table:
+		POS.append(table[i])
+
+	getAllSelected(POS,temp,allSelected,0)
+	for i in allSelected:
+			print (i)
+
+	for i in allSelected:
+		if len(i)==min([len(x) for x in allSelected]):
+			selected_implicants.append(i)
+
 def minimalize(prime_implicants,min_terms_categorised):
 	selected_implicants=[]
 	table={}
+	essential_implicants=[]
 	for i,j in min_terms_categorised.items():
 		for k in j:
 			table[k[1][0]]=[]
@@ -100,28 +154,39 @@ def minimalize(prime_implicants,min_terms_categorised):
 		for j in i[1]:
 			table[j].append(i)
 
-	while len(table):
-		selectImplicants(table,selected_implicants)
+	getEssential(table,essential_implicants)
 
-	return selected_implicants
+	printing(essential_implicants)
+	
+	for i in table:
+		for j in table[i]:
+			if j in essential_implicants:
+				table[i].remove(j)
+
+	for i in essential_implicants:
+		for j in i[1]:
+			if j in [x for x in table]:
+				del table[j]
+
+	for i in table:
+		print (i," : ",table[i])
+
+	petrickMethod(table,selected_implicants)
+	#print (selected_implicants)
+
+	#while len(table):
+	#	selectImplicants(table,selected_implicants)
+	return essential_implicants,selected_implicants
 
 
-def printing(string):
-	count=-1
-	for i in string:
-		count+=1
-		if i=='0':
-			print(chr(ord('a')+count)+"'",end="")
-		elif i =="1":
-			print(chr(ord('a')+count),end="")
-	print("  +  ",end="")
+
 
 def main():
 	prime_implicants=[]
 
 	variables,min_terms_categorised = inputData()	
 	getPrimeImplicants(min_terms_categorised,variables,prime_implicants)	
-	selected_implicants= minimalize(prime_implicants,min_terms_categorised)
+	essential_implicants,selected_implicants= minimalize(prime_implicants,min_terms_categorised)
 
 	print("\nThe prime implicants are:")
 	for i in prime_implicants:
@@ -131,6 +196,18 @@ def main():
 	for i in selected_implicants:
 		print(i)
 
+	print("\nThe essential implicants are:")
+	for i in essential_implicants:
+		print(i)
+
+
+	for i in selected_implicants:
+		for j in i:
+			essential_implicants.append(j)
+			printing(essential_implicants)
+			essential_implicants.remove(j)
+	#printing(selected_implicants)
+	'''
 	print("\nThe function is:")
 	for i in selected_implicants:
 		if i[0]=="-"*variables:
@@ -138,7 +215,7 @@ def main():
 		else:
 			printing(i[0])
 	print("0")
-
+	'''
 if __name__=="__main__":
 	main() 
 
