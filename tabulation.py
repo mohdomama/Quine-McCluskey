@@ -1,5 +1,11 @@
 def printing(mainList,char):
-	for string in [x[0] for x in mainList]:
+	'''Prints a boolean function with variables as a,b,c..
+	
+	Args:
+		mainList: A list of lists. Each list should be a string of the form '1's and '0's representing a term of the funtion.
+		char: It is the character with which two terms are seperated. e.g- '+' or ','
+	'''
+	for string in mainList:
 		count=-1
 		for i in string:
 			count+=1
@@ -12,6 +18,15 @@ def printing(mainList,char):
 
 
 def categorize(min_terms,variables):
+	''' Categorises minterms on the basis of number of '1's
+
+	Args:
+		min_terms: A lsit of min terms. Each item is a binary number string e.g-"1001".
+		variables: The number of variables in the function
+
+	Returns:
+		min_terms_categorized: A dictionary with number of '1's as keys and a list of minterms as values with the same number of '1's as the key.
+	'''
 	min_terms_categorised={}
 	
 	for i in range (variables+1):
@@ -24,6 +39,13 @@ def categorize(min_terms,variables):
 
 
 def inputData():
+	'''Takes input. i.e- variables, minterms. Both integer values.
+
+	Returns:
+		variables: Number of variables in function.
+		min_terms_categorized: A dictionary with number of '1's as keys and a list of minterms as values with the same number of '1's as the key.
+	
+	'''
 	variables=int(input("Enter the number of variables:\n"))
 	min_terms=[bin(int(x))[2:].zfill(variables) for x in input("Enter the minterms (space seperated):\n").split()]
 	min_terms_categorised = categorize(min_terms,variables)
@@ -31,6 +53,16 @@ def inputData():
 
 
 def check(element1,element2):
+	'''Checks if the two terms differ by only one place.
+	
+	Args:
+		element1: A list with first element a string of "1"s and "0"s and "-"s
+		element2: A list with first element a string of "1"s and "0"s and "-"s
+		
+	Returns:
+		False - is terms differ by more than 1
+		A string of "1"s and "0"s and "-"s otherwise.
+	'''
 	count=0
 	combined=[]
 	for i in range (len(element1[0])):
@@ -45,6 +77,14 @@ def check(element1,element2):
 
 
 def getPrimeImplicants(terms,number,prime_implicants):
+	'''
+
+	Args:
+		
+
+	Returns:
+	
+	'''
 	new_terms={}
 	recursion=0
 	used_terms=[]
@@ -79,6 +119,14 @@ def getPrimeImplicants(terms,number,prime_implicants):
 
 
 def getEssential(table,essential_implicants):
+	'''
+
+	Args:
+		
+
+	Returns:
+	
+	'''
 
 	for i in [x for x in table if len(table[x])==1]:
 		if table[i][0] not in essential_implicants:
@@ -87,6 +135,14 @@ def getEssential(table,essential_implicants):
 
 
 def getAllSelected(POS,temp,allSelected,index):
+	'''
+
+	Args:
+		
+
+	Returns:
+	
+	'''
 	if index==len(POS):
 		temp1=temp+[]
 		allSelected.append(temp1)
@@ -102,6 +158,14 @@ def getAllSelected(POS,temp,allSelected,index):
 
 
 def petrickMethod(table,selected_implicants):
+	'''
+
+	Args:
+		
+
+	Returns:
+	
+	'''
 	temp=[]
 	POS=[]
 	allSelected=[]
@@ -116,6 +180,14 @@ def petrickMethod(table,selected_implicants):
 				selected_implicants.append(i)
 
 def getcount(mainList):
+	'''
+
+	Args:
+		
+
+	Returns:
+	
+	'''
 	count =0
 	for string in [x[0] for x in mainList]:
 		for i in string:
@@ -125,6 +197,14 @@ def getcount(mainList):
 	return count
 
 def getminimal(selected_implicants):
+	'''
+
+	Args:
+		
+
+	Returns:
+	
+	'''
 	minimal_implicants=[]
 	minimum=999999
 	for i in selected_implicants:
@@ -138,6 +218,14 @@ def getminimal(selected_implicants):
 	return minimal_implicants
 
 def minimalize(prime_implicants,min_terms_categorised):
+	'''
+
+	Args:
+		
+
+	Returns:
+	
+	'''
 	selected_implicants=[]
 	table={}
 	essential_implicants=[]
@@ -162,12 +250,29 @@ def minimalize(prime_implicants,min_terms_categorised):
 	return essential_implicants, minimal_implicants
 
 
-def main():
-	prime_implicants=[]
+def tabulation():
+	prime_implicants = []
+	functions = []
 
 	variables,min_terms_categorised = inputData()	
 	getPrimeImplicants(min_terms_categorised,variables,prime_implicants)	
-	essential_implicants,selected_implicants= minimalize(prime_implicants,min_terms_categorised)
+	essential_implicants,selected_implicants = minimalize(prime_implicants,min_terms_categorised)
+
+	for i in selected_implicants:
+		functions.append( essential_implicants+i )
+
+
+	prime_implicants = [x[0] for x in prime_implicants]
+	essential_implicants = [x[0] for x in essential_implicants]
+
+	for i in range (len(functions)):
+		functions[i] = [x[0] for x in functions[i]]
+
+	return prime_implicants, essential_implicants, functions
+
+
+def main():
+	prime_implicants, essential_implicants, functions = tabulation()
 
 	print("\nThe prime implicants are:")
 	printing(prime_implicants,',')
@@ -176,10 +281,12 @@ def main():
 	printing(essential_implicants,',')
 
 	print("\nThe possible functions are:")
-	for i in selected_implicants:
-		printing(essential_implicants+i,'+')
+	for i in functions :
+		printing(i,'+')
+
+
+
 		
-	
 	
 if __name__=="__main__":
 	main() 
