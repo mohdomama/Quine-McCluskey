@@ -46,9 +46,8 @@ def inputData():
 		min_terms_categorized: A dictionary with number of '1's as keys and a list of minterms as values with the same number of '1's as the key.
 	
 	'''
-	variables=int(input("Enter the number of variables:\n"))
-	min_terms=[bin(int(x))[2:].zfill(variables) for x in input("Enter the minterms (space seperated):\n").split()]
-	min_terms_categorised = categorize(min_terms,variables)
+	
+	
 	return variables,min_terms_categorised
 
 
@@ -250,11 +249,13 @@ def minimalize(prime_implicants,min_terms_categorised):
 	return essential_implicants, minimal_implicants
 
 
-def tabulation():
+def tabulation(variables, min_terms):
 	prime_implicants = []
 	functions = []
 
-	variables,min_terms_categorised = inputData()	
+	min_terms=[bin(int(x))[2:].zfill(variables) for x in min_terms]
+	min_terms_categorised = categorize(min_terms,variables)
+
 	getPrimeImplicants(min_terms_categorised,variables,prime_implicants)	
 	essential_implicants,selected_implicants = minimalize(prime_implicants,min_terms_categorised)
 
@@ -272,7 +273,10 @@ def tabulation():
 
 
 def main():
-	prime_implicants, essential_implicants, functions = tabulation()
+	variables = int(input("Enter the number of variables:\n"))
+	min_terms = [int(x) for x in input("Enter the minterms (space seperated) :\n").split()]
+
+	prime_implicants, essential_implicants, functions = tabulation(variables, min_terms)
 
 	print("\nThe prime implicants are:")
 	printing(prime_implicants,',')
