@@ -13,6 +13,7 @@ def combination(functions,index, selections, temp):
 
 def leastAND (selections):
 	minimum = len(set([x for y in selections[0] for x in y]))
+	leastAND_combination = selections[0]
 	for i in selections:
 		if minimum > len(set([x for y in i for x in y])):
 			minimum = len(set([x for y in i for x in y]))
@@ -48,7 +49,7 @@ def main():
 		print("NEXT")
 
  
-	print("The least and comhination is :\n")
+	print("The least and combination that solves all functions are:\n")
 	for i in leastAND(selections):
 		tabulation.printing(i,'+')
 	
