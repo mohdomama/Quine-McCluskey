@@ -6,4 +6,5 @@
 - `tabulation.cpp`: C++ implementation of the algorithm
 - `pla.py` : solves a `programmable logic array`. It uses tabulation to find possible solutions of n provided functions and then calculates the least combination that solves all functions.
 
-> NOTE: pla.py is buggy
+###### NOTE: pla.py is buggy
+The C++ implementaion is more readable and slightly more optimized. 
