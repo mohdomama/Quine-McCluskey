@@ -122,7 +122,7 @@ private:
 
 public:
 	void initialise() {
-		cout << "Enter number of bits:" << endl;
+		cout << "Enter number of bits/variables:" << endl;
 		cin >> nBits;
 
 		cout << "Enter number of min terms:" << endl;
