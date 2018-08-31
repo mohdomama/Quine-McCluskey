@@ -13,3 +13,14 @@ The C++ implementaion is more readable and slightly more optimized.
 - The Quine McCluskey algorithm reference is [here](https://en.wikipedia.org/wiki/Quine%E2%80%93McCluskey_algorithm)
 - Once the prime implicants are obtained, I have used [Petrick Method](https://en.wikipedia.org/wiki/Petrick%27s_method) for minimisation.
 
+### Screenshots
+- Python3:
+
+![Python3 Tabulation](https://github.com/mohdomama/Quine-McCluskey/blob/master/screenshots/PythonTab.png)
+
+- C++:
+
+![C++ Tabulation](https://github.com/mohdomama/Quine-McCluskey/blob/master/screenshots/C%2B%2BTab1.png)
+![C++ Tabulation](https://github.com/mohdomama/Quine-McCluskey/blob/master/screenshots/C%2B%2BTab2.png)
+
+###### I have given a more verbose output with C++
